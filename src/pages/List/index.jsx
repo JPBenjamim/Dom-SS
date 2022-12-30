@@ -1,9 +1,9 @@
-function List(){
-    return(
-        <div>
-            Listagem
-        </div>
-    )
+
+
+function List() {
+  return (
+    <div>hh</div>
+  );
 }
 
 export { List };
