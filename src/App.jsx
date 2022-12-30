@@ -1,6 +1,7 @@
 import styles from './Global.module.css'
 
-import Header from './assets/components/Header';
+import Header from './components/Header'
+import { Table } from './components/Table';
 
 import { Home } from './pages/Home';
 import { List } from './pages/List';
@@ -13,8 +14,10 @@ function App() {
         <Header />
         <Routes>
           <Route index element={<Home />}/>
-          <Route path="list" element={<List />} />
+          <Route path="list" element={<List />}/>
+          
         </Routes>
+        < Table />
       </div>
     )
 }
