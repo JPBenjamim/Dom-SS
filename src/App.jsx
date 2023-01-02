@@ -7,6 +7,7 @@ import { Home } from './pages/Home';
 import { List } from './pages/List';
 
 import { Routes, Route } from 'react-router-dom';
+import ModalComponent from './components/Modal';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           
         </Routes>
         < Table />
+        <ModalComponent />
       </div>
     )
 }
