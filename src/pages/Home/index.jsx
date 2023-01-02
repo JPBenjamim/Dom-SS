@@ -1,7 +1,10 @@
+import Table from "../../components/Table";
+
+
 function Home() {
     return(
         <div>
-            Home
+            <Table />
         </div>
     )
 }

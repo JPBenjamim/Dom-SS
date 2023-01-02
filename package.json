@@ -10,9 +10,14 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
+    "axios": "^1.2.2",
+    "bootstrap": "^5.2.3",
+    "mui-datatables-bitozen": "^4.0.19",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.6.1"
+    "react-router-dom": "^6.6.1",
+    "react-table": "^7.8.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
