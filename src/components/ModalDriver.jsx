@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import  Button from 'react-bootstrap/Button'
-import Form from './formAdd'
+import FormDriver  from './FormDriver'
+
+
 
 import Modal from 'react-modal'
 
@@ -17,7 +19,7 @@ const customStyles = {
   }
 }
 
-function ModalComponent() {
+function ModalDriver() {
   const [modalIsOpen, setIsOpen] = useState(false)
 
   function openModal() {
@@ -44,15 +46,15 @@ function ModalComponent() {
       >
         <div>
           {' '}
-          <Form />
+          <FormDriver />
         </div>
         <Button onClick={() => closeModal()}></Button>
       </Modal>
       <Button onClick={() => openModal()} variant="primary">
-        Incluir
+        Dados do motorista
       </Button>
     </div>
   )
 }
 
-export default ModalComponent
+export default ModalDriver

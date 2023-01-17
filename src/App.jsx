@@ -1,8 +1,7 @@
 import styles from './Global.module.css'
 
 import Header from './components/Header'
-
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Home } from './pages/Home';
 import { List } from './pages/List';
 

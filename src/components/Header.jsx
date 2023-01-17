@@ -1,4 +1,5 @@
 import React from 'react'
+import Modal from './Modal'
 
 import logo from '/src/assets/dom.png'
 
@@ -10,7 +11,8 @@ function Header() {
       <h1>Controle de fornecedores</h1>
       <div className={styles.container}>
         <img src={logo} className={styles.logo} />
-        <button className={styles.button}>Incluir</button>
+    
+        <Modal /> 
       </div>
     </div>
   )
