@@ -1,21 +1,8 @@
 import { useState } from 'react'
-import  Button from 'react-bootstrap/Button'
-import Form from './formAdd'
-
-import Modal from 'react-modal'
+import  {Button, Modal} from 'react-bootstrap'
+import FormAdd from './formAdd'
 
 
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
-  }
-}
 
 function ModalComponent() {
   const [modalIsOpen, setIsOpen] = useState(false)
@@ -24,34 +11,23 @@ function ModalComponent() {
     setIsOpen(true)
   }
 
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = '#f00'
-  }
-
   function closeModal() {
     setIsOpen(false)
   }
 
   return (
-    <div>
-      <Modal
-        isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Example Modal"
-      >
-        <div>
-          {' '}
-          <Form />
-        </div>
-        <Button onClick={() => closeModal()}></Button>
+    <>
+      <Button onClick={() => openModal()} variant="primary">Incluir</Button>
+
+      <Modal show={modalIsOpen} onHide={closeModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Incluir</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FormAdd closeModal={closeModal} />
+        </Modal.Body>
       </Modal>
-      <Button onClick={() => openModal()} variant="primary">
-        Incluir
-      </Button>
-    </div>
+    </>
   )
 }
 
