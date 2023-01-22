@@ -1,12 +1,11 @@
-import Table from "../../components/Table";
-
+import Table from '../../components/Table/Table'
 
 function Home() {
-    return(
-        <div>
-            <Table />
-        </div>
-    )
+  return (
+    <div>
+      <Table />
+    </div>
+  )
 }
 
-export {Home};
+export { Home }
