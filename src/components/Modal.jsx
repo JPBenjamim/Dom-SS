@@ -26,7 +26,7 @@ function ModalComponent({name, color, typeModal, dataDetails}) {
       <Modal.Header closeButton>
         <Modal.Title>{name}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body >
       <FormAdd dataDetails={dataDetails} typeModal={typeModal} closeModal={closeModal} />
       </Modal.Body>
       </Modal>
