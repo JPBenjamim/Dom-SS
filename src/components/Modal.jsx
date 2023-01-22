@@ -4,8 +4,11 @@ import FormAdd from './formAdd'
 
 
 
-function ModalComponent() {
+function ModalComponent({name, color, typeModal, dataDetails}) {
   const [modalIsOpen, setIsOpen] = useState(false)
+  const handleWheel = (e) => {
+    e.preventDefault();
+  };
 
   function openModal() {
     setIsOpen(true)
@@ -16,17 +19,18 @@ function ModalComponent() {
   }
 
   return (
-    <>
-      <Button onClick={() => openModal()} variant="primary">Incluir</Button>
+    < >
+      <Button onClick={() => openModal()} variant={color}>{name}</Button>
 
-      <Modal show={modalIsOpen} onHide={closeModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Incluir</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <FormAdd closeModal={closeModal} />
-        </Modal.Body>
+      <Modal show={modalIsOpen} onHide={closeModal} onWheel={handleWheel}>
+      <Modal.Header closeButton>
+        <Modal.Title>{name}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+      <FormAdd dataDetails={dataDetails} typeModal={typeModal} closeModal={closeModal} />
+      </Modal.Body>
       </Modal>
+
     </>
   )
 }

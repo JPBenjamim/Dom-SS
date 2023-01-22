@@ -1,10 +1,10 @@
 import TableData from './TableData'
 
-function TableRow({ data }) {
+function TableRow({ data, sector }) {
   return (
     <tbody>
       {data.map((value, key) => {
-        return <TableData key={key} data={value} />
+        return <TableData key={key} data={value} sector={sector} />
       })}
     </tbody>
   )

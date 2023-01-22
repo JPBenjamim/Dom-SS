@@ -5,13 +5,13 @@ import TableHeaders from './TableHeaders'
 
 import { data } from './data'
 
-function FormAdd() {
+function FormAdd({sector}) {
   return (
     <Table>
       <thead>
         <TableHeaders />
       </thead>
-      <TableRow data={data} />
+      <TableRow data={data} sector={sector} />
     </Table>
   )
 }
