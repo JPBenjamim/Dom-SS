@@ -7,7 +7,7 @@ function TableHeaders() {
       <th>Quantidade</th>
       <th>Carga</th>
       <th>Agendada</th>
-      </tr>
+    </tr>
 )
 }
 export default TableHeaders

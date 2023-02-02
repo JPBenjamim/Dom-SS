@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Form, Button, InputGroup } from "react-bootstrap";
 
-function FormAdd({ closeModal }) {
-  const [supplierName, setSupplierName] = useState("");
-  const [notes, setNotes] = useState("");
+function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
+  const [supplierName, setSupplierName] = useState(dataDetails?.suppliersName || "");
+  const [notes, setNotes] = useState(dataDetails.idNotes  || "");
   const [listNotes, setListNotes] = useState([]);
-  const [quantity, setQuantity] = useState("");
-  const [hour, setHour] = useState("");
-  const [load, setLoad] = useState("Seca");
-  const [isSchedule, setIsSchedule] = useState(false);
+  const [quantity, setQuantity] = useState(dataDetails.quantity || "");
+  const [hour, setHour] = useState(dataDetails.hour || "");
+  const [load, setLoad] = useState(dataDetails.load || "Seca");
+  const [isSchedule, setIsSchedule] = useState(dataDetails.isSchedule || false);
   const [document, setDocument] = useState("");
   const [quantityType, setQuantityType] = useState("");
 
@@ -32,18 +32,19 @@ function FormAdd({ closeModal }) {
   return (
     <div>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formSupplierName" className="py-2">
-          <Form.Label>Fornecedor</Form.Label>
+        <Form.Group controlId="formSupplierName" className="mb-3">
+          <Form.Label className="mb-1">Fornecedor</Form.Label>
           <Form.Control
             type="text"
             placeholder="Nome do fornecedor"
             value={supplierName}
+            disabled={typeModal === 'releaseNote'}
             onChange={(e) => setSupplierName(e.target.value)}
           />
         </Form.Group>
 
-        <Form.Group controlId="formNotes" className="py-2">
-          <Form.Label>Notas</Form.Label>
+        <Form.Group controlId="formNotes" className="mb-3">
+          <Form.Label className="mb-1">Notas</Form.Label>
           <Form.Control
             type="text"
             placeholder="Números das notas"
@@ -53,6 +54,8 @@ function FormAdd({ closeModal }) {
                 setNotes(e.target.value);
               }
             }}
+            disabled={typeModal === 'releaseNote'}
+
             onKeyUp={handleKeyUpEnter}
           />
           <div className="d-flex mt-2 flex-wrap">
@@ -70,9 +73,9 @@ function FormAdd({ closeModal }) {
             ))}
           </div>
         </Form.Group>
-        <Form.Group controlId="formQuantity">
+        <Form.Group className="mb-3" controlId="formQuantity">
           <div>
-            <Form.Label className="py-2">Quantidade</Form.Label>
+            <Form.Label className="mb-1">Quantidade</Form.Label>
           </div>
           <div className="d-flex justify-content-between">
             <div className="form-group col-6 ">
@@ -85,6 +88,8 @@ function FormAdd({ closeModal }) {
                     setQuantity(e.target.value);
                   }
                 }}
+                disabled={typeModal === 'releaseNote'}
+
               />
             </div>
             <div className="form-group col-6 d-flex justify-content-around">
@@ -95,6 +100,8 @@ function FormAdd({ closeModal }) {
                 id="pallets"
                 value="pallets"
                 onChange={(e) => setQuantityType(e.target.value)}
+                disabled={typeModal === 'releaseNote'}
+                
               />
               <Form.Check
                 type="radio"
@@ -103,25 +110,31 @@ function FormAdd({ closeModal }) {
                 id="volume"
                 value="volume"
                 onChange={(e) => setQuantityType(e.target.value)}
+                disabled={typeModal === 'releaseNote'}
+
               />
             </div>
           </div>
         </Form.Group>
 
-        <Form.Group controlId="formHour" className="py-2">
-          <Form.Label>Hora</Form.Label>
+        <Form.Group controlId="formHour" className="mb-3">
+          <Form.Label className="mb-1">Hora</Form.Label>
           <Form.Control
             type="time"
             value={hour}
+            disabled={typeModal === 'releaseNote'}
+
             onChange={(e) => setHour(e.target.value)}
           />
         </Form.Group>
 
-        <Form.Group controlId="formLoad" className="py-2">
-          <Form.Label>Carga</Form.Label>
+        <Form.Group controlId="formLoad" className="mb-3">
+          <Form.Label className="mb-1">Carga</Form.Label>
           <Form.Control
             as="select"
             value={load}
+            disabled={typeModal === 'releaseNote'}
+
             onChange={(e) => setLoad(e.target.value)}
           >
             <option>Seca</option>
@@ -129,15 +142,18 @@ function FormAdd({ closeModal }) {
           </Form.Control>
         </Form.Group>
 
-        <Form.Group className="py-2">
-          <Form.Label>Agendado?</Form.Label>
+        <Form.Group className="mb-3">
+          <Form.Label className="mb-1" >Agendado?</Form.Label>
           <div className="form-check form-check-inline mx-2">
+            
             <input
               className="form-check-input"
               type="radio"
               id="yes"
               name="schedule"
               value="yes"
+              disabled={typeModal === 'releaseNote'}
+
               checked={isSchedule === "yes"}
               onChange={(e) => setIsSchedule(e.target.value)}
             />
@@ -152,6 +168,8 @@ function FormAdd({ closeModal }) {
               id="no"
               name="schedule"
               value="no"
+              disabled={typeModal === 'releaseNote'}
+
               checked={isSchedule === "no"}
               onChange={(e) => setIsSchedule(e.target.value)}
             />
@@ -161,20 +179,24 @@ function FormAdd({ closeModal }) {
           </div>
         </Form.Group>
 
-        <Form.Group controlId="formName">
-          <Form.Label>Nome</Form.Label>
+        <Form.Group controlId="formName" className="mb-3">
+          <Form.Label className="mb-1">Nome</Form.Label>
           <Form.Control
             className="mb-3"
             type="text"
+            disabled={typeModal === 'releaseNote'}
+
             placeholder="Nome do motorista"
           />
         </Form.Group>
 
-        <Form.Group controlId="formDocument">
-          <Form.Label>Documento</Form.Label>
+        <Form.Group className="mb-3" controlId="formDocument">
+          <Form.Label className="mb-1">Documento</Form.Label>
           <Form.Control
             className="mb-3"
             type="text"
+            disabled={typeModal === 'releaseNote'}
+
             placeholder="CNH ou CPF"
             inputProps={{ step: 1 }}
             onChange={(e) => {
@@ -186,16 +208,22 @@ function FormAdd({ closeModal }) {
           />
         </Form.Group>
 
-        <Form.Group controlId="formContact">
-          <Form.Label>Contato</Form.Label>
+        <Form.Group className="mb-3" controlId="formContact">
+          <Form.Label className="mb-1">Contato</Form.Label>
           <InputGroup className="mb-3">
-            <Form.Control type="cellphone" placeholder="(21) 99999-9999" />
+            <Form.Control 
+              disabled={typeModal === 'releaseNote'}
+              type="cellphone" 
+              placeholder="(21) 99999-9999" 
+            />
           </InputGroup>
         </Form.Group>
 
-        <Form.Group controlId="formVehicle">
-          <Form.Label>Tipo de Veiculo</Form.Label>
-          <Form.Control as="select">
+        <Form.Group className="mb-3" controlId="formVehicle">
+          <Form.Label className="mb-1">Tipo de Veiculo</Form.Label>
+          <Form.Control as="select" 
+            disabled={typeModal === 'releaseNote'}
+          >
             <option>Caminhão</option>
             <option>Carreta</option>
             <option>Vuc</option>
@@ -206,11 +234,22 @@ function FormAdd({ closeModal }) {
         </Form.Group>
 
         <div className="d-flex justify-content-between pt-4">
-          <Button variant="primary">Adicionar</Button>
-
+          {typeModal !== 'releaseNote' &&
+            <Button variant="primary">{typeModal === 'edit' ? 'Salvar' : 'Adicionar'}</Button>
+          }
+          
+          {typeModal === 'releaseNote' ?
+          <>
+            <Button variant="success" onClick={closeModal}>
+              Liberar nota
+            </Button>
+          </>
+          :
           <Button variant="danger" onClick={closeModal}>
             Cancelar
           </Button>
+          }
+          
         </div>
       </Form>
     </div>
