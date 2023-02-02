@@ -1,26 +1,14 @@
-import { useState } from 'react';
-
 import Modal from '../Modal'
 
-function TableData({ data, sector }) {
-  const [openModalEdit, setOpenModalEdit] = useState(false);
-
-  function openModal() {
-    setIsOpen(true)
-  }
-
-  function closeModal() {
-    setIsOpen(false)
-  }
-
+function TableData({ data = {}, sector }) {
   return (
     <tr>  
-      <td>{data.suppliersName}</td>
+      <td>{data.providerName}</td>
       <td>{data.idNotes}</td>
       <td>{data.hour}</td>
       <td>{data.quantity}</td>
-      <td>{data.load}</td>
-      <td>{data.isSchedule}</td>
+      <td>{data.loadType}</td>
+      <td>{data.isSchedule ? "Sim" : "Não"}</td>
       <td>
         {
         sector !== 'home' &&

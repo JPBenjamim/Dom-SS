@@ -1,20 +1,47 @@
 import { useState } from "react";
+
 import { Form, Button, InputGroup } from "react-bootstrap";
 
+import { axiosApi } from "../services/axios";
+
 function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
-  const [supplierName, setSupplierName] = useState(dataDetails?.suppliersName || "");
-  const [notes, setNotes] = useState(dataDetails.idNotes  || "");
+  const [supplierName, setSupplierName] = useState(dataDetails?.providerName || "");
+  const [notes, setNotes] = useState(dataDetails.noteNumber  || "");
   const [listNotes, setListNotes] = useState([]);
   const [quantity, setQuantity] = useState(dataDetails.quantity || "");
   const [hour, setHour] = useState(dataDetails.hour || "");
-  const [load, setLoad] = useState(dataDetails.load || "Seca");
+  const [load, setLoad] = useState(dataDetails.loadType || "Seca");
   const [isSchedule, setIsSchedule] = useState(dataDetails.isSchedule || false);
   const [document, setDocument] = useState("");
-  const [quantityType, setQuantityType] = useState("");
+  const [vehicleType, setVehicleType] = useState(dataDetails.vehicleType || "Caminhão");
+  const [telePhone, setTelePhone] = useState(dataDetails.telephone || "");
+  const [quantityType, setQuantityType] = useState(dataDetails.volumeType || "");
+  const [name, setName] = useState(dataDetails.name || "");
+  const [messageError, setMessageError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Submited");
+    axiosApi.post('providers', {
+        providerName: supplierName,
+        hour: "2023-01-20T20:54:08.000Z",
+        idNotes: "10101",
+        idWorkDay: "",
+        quantity: quantity,
+        isConfirmedByHeritage: false,
+        isConfirmedByCPD: false,
+        isConfirmedByArbitrator: false,
+        loadType: load,
+        volumeType: quantityType,
+        isChecked: false,
+        isReturned: false,
+        isSchedule: isSchedule,
+        idDriver: ""
+    }).then(() => {
+      setMessageError("");
+      closeModal();
+    }).catch(() => {
+      setMessageError("Erro ao incluir nota.");
+    });
   };
 
   const handleKeyUpEnter = (e) => {
@@ -31,7 +58,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
 
   return (
     <div>
-      <Form onSubmit={handleSubmit}>
+      <Form>
         <Form.Group controlId="formSupplierName" className="mb-3">
           <Form.Label className="mb-1">Fornecedor</Form.Label>
           <Form.Control
@@ -99,6 +126,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
                 name="quantityType"
                 id="pallets"
                 value="pallets"
+                checked={quantityType === "pallets"}
                 onChange={(e) => setQuantityType(e.target.value)}
                 disabled={typeModal === 'releaseNote'}
                 
@@ -109,6 +137,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
                 name="quantityType"
                 id="volume"
                 value="volume"
+                checked={quantityType === "volume"}
                 onChange={(e) => setQuantityType(e.target.value)}
                 disabled={typeModal === 'releaseNote'}
 
@@ -120,7 +149,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
         <Form.Group controlId="formHour" className="mb-3">
           <Form.Label className="mb-1">Hora</Form.Label>
           <Form.Control
-            type="time"
+            type="datetime-local"
             value={hour}
             disabled={typeModal === 'releaseNote'}
 
@@ -151,11 +180,11 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
               type="radio"
               id="yes"
               name="schedule"
-              value="yes"
+              value={true}
               disabled={typeModal === 'releaseNote'}
 
-              checked={isSchedule === "yes"}
-              onChange={(e) => setIsSchedule(e.target.value)}
+              checked={isSchedule === true}
+              onChange={(e) => setIsSchedule(e.target.value !== true)}
             />
             <label className="form-check-label" htmlFor="yes">
               Sim
@@ -167,11 +196,11 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
               type="radio"
               id="no"
               name="schedule"
-              value="no"
+              value={false}
               disabled={typeModal === 'releaseNote'}
 
-              checked={isSchedule === "no"}
-              onChange={(e) => setIsSchedule(e.target.value)}
+              checked={isSchedule === false}
+              onChange={(e) => setIsSchedule(e.target.value === true)}
             />
             <label className="form-check-label" htmlFor="no">
               Não
@@ -185,7 +214,8 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
             className="mb-3"
             type="text"
             disabled={typeModal === 'releaseNote'}
-
+            onChange={e => setName(e.target.value)}
+            value={name}
             placeholder="Nome do motorista"
           />
         </Form.Group>
@@ -214,7 +244,9 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
             <Form.Control 
               disabled={typeModal === 'releaseNote'}
               type="cellphone" 
-              placeholder="(21) 99999-9999" 
+              placeholder="(21) 99999-9999"
+              onChange={e => setTelePhone(e.target.value)}
+              value={telePhone}
             />
           </InputGroup>
         </Form.Group>
@@ -223,6 +255,8 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
           <Form.Label className="mb-1">Tipo de Veiculo</Form.Label>
           <Form.Control as="select" 
             disabled={typeModal === 'releaseNote'}
+            onChange={e => setVehicleType(e.target.value)}
+            value={vehicleType}
           >
             <option>Caminhão</option>
             <option>Carreta</option>
@@ -232,10 +266,12 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
             <option>Furgão</option>
           </Form.Control>
         </Form.Group>
-
+        <p>
+          {messageError}
+        </p>
         <div className="d-flex justify-content-between pt-4">
           {typeModal !== 'releaseNote' &&
-            <Button variant="primary">{typeModal === 'edit' ? 'Salvar' : 'Adicionar'}</Button>
+            <Button variant="primary" onClick={e => handleSubmit(e)}>{typeModal === 'edit' ? 'Salvar' : 'Adicionar'}</Button>
           }
           
           {typeModal === 'releaseNote' ?

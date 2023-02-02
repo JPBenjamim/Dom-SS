@@ -1,11 +1,25 @@
-import { Table } from 'react-bootstrap'
-import TableRow from './TableRow'
+import { useEffect, useState } from 'react';
+import { Table } from 'react-bootstrap';
+import {axiosApi} from '../../services/axios';
 
-import TableHeaders from './TableHeaders'
+import TableRow from './TableRow';
 
-import { data } from './data'
+import TableHeaders from './TableHeaders';
 
-function FormAdd({sector}) {
+function TableComponent({sector}) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axiosApi.get('providers')
+      .then(response => {
+        setData(response.data);
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, [])
+
   return (
     <Table>
       <thead>
@@ -16,4 +30,4 @@ function FormAdd({sector}) {
   )
 }
 
-export default FormAdd
+export default TableComponent;

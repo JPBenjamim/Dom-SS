@@ -19,7 +19,7 @@ function ModalComponent({name, color, typeModal, dataDetails}) {
   }
 
   return (
-    < >
+    <>
       <Button onClick={() => openModal()} variant={color}>{name}</Button>
 
       <Modal show={modalIsOpen} onHide={closeModal} onWheel={handleWheel}>
