@@ -1,6 +1,5 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const axiosApi = axios.create({
-    baseURL: 'http://localhost:3333'
+  baseURL: "https://moonlit-smakager-44bc99.netlify.app/",
 });
-  
