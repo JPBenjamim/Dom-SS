@@ -2,7 +2,7 @@ import styles from './Global.module.css'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Home } from './pages/Home';
-import { Patrimony } from './pages/Patrimony';
+import { Patrimony } from './pages/patrimony';
 
 import { Routes, Route } from 'react-router-dom';
 

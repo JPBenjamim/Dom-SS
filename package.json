@@ -11,11 +11,9 @@
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet"
   },
   "dependencies": {
-    "@material-ui/core": "^4.12.4",
     "axios": "^1.2.3",
     "bootstrap": "^5.2.3",
-    "mui-datatables-bitozen": "^4.0.19",
-    "react": "^18.2.0",
+    "react": "^17.0.0",
     "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
     "react-modal": "^3.16.1",
