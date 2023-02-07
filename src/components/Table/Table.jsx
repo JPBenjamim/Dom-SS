@@ -13,7 +13,7 @@ function TableComponent({sector}) {
   
 
   useEffect(() => {
-    axiosApi.get('http://127.0.0.1:5173/api/providers')
+    axiosApi.get('https://domss.netlify.app/api/providers')
       .then(response => {
         setData(response.data);
         console.log(response.data)
