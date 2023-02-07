@@ -3,7 +3,7 @@ import TableData from './TableData'
 function TableRow({ data, sector }) {
   return (
     <tbody>
-      {data.map((value, key) => {
+      {Array.isArray(data) && data.map((value, key) => {
         return <TableData key={key} data={value} sector={sector} />
       })}
     </tbody>
