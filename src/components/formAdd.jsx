@@ -6,26 +6,25 @@ import { axiosApi } from "../services/axios";
 
 function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
   const [supplierName, setSupplierName] = useState(dataDetails?.providerName || "");
-  const [notes, setNotes] = useState(dataDetails.noteNumber  || "");
-  const [listNotes, setListNotes] = useState([]);
+  const [notes, setNotes] = useState("");
+  const [listNotes, setListNotes] = useState(dataDetails.notes.noteNumber.split(", ") || []);
   const [quantity, setQuantity] = useState(dataDetails.quantity || "");
   const [hour, setHour] = useState(dataDetails.hour || "");
   const [load, setLoad] = useState(dataDetails.loadType || "Seca");
   const [isSchedule, setIsSchedule] = useState(dataDetails.isSchedule || false);
-  const [document, setDocument] = useState("");
+  const [document, setDocument] = useState(dataDetails.driver.document || "");
   const [vehicleType, setVehicleType] = useState(dataDetails.vehicleType || "Caminhão");
-  const [telePhone, setTelePhone] = useState(dataDetails.telephone || "");
+  const [telePhone, setTelePhone] = useState(dataDetails.driver.telephone || "");
   const [quantityType, setQuantityType] = useState(dataDetails.volumeType || "");
-  const [name, setName] = useState(dataDetails.name || "");
+  const [name, setName] = useState(dataDetails.driver.name || "");
   const [messageError, setMessageError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axiosApi.post('providers', {
+    axiosApi.post('provider/', {
+      provider: {
         providerName: supplierName,
-        hour: "2023-01-20T20:54:08.000Z",
-        idNotes: "10101",
-        idWorkDay: "",
+        hour: '2000-10-20',
         quantity: quantity,
         isConfirmedByHeritage: false,
         isConfirmedByCPD: false,
@@ -34,8 +33,18 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
         volumeType: quantityType,
         isChecked: false,
         isReturned: false,
-        isSchedule: isSchedule,
-        idDriver: ""
+        isSchedule: isSchedule
+      },
+      notes: {
+        noteNumber: listNotes.join(', ')
+      },
+      driver: {
+          name: name,
+          plate: "1231",
+          vehicleType: vehicleType,
+          document: document,
+          telephone: telePhone
+      }
     }).then(() => {
       setMessageError("");
       closeModal();
@@ -221,13 +230,13 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formDocument">
-          <Form.Label className="mb-1">Documento</Form.Label>
+          <Form.Label className="mb-1">CNH</Form.Label>
           <Form.Control
             className="mb-3"
             type="text"
             disabled={typeModal === 'releaseNote'}
 
-            placeholder="CNH ou CPF"
+            placeholder="CNH"
             inputProps={{ step: 1 }}
             onChange={(e) => {
               if (!isNaN(e.target.value)) {

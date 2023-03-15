@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const axiosApi = axios.create({
-  baseURL: "https://domss.netlify.app/",
+  baseURL: "http://139.59.152.157:7777",
 });

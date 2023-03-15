@@ -2,33 +2,41 @@ import { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import {axiosApi} from '../../services/axios';
 
-import TableRow from './TableRow';
-
-import TableHeaders from './TableHeaders';
+import TableRow from './TableRow'
 
 
-function TableComponent({sector}) {
+function TableComponent({sector, urlServer}) {
   const [data, setData] = useState([]);
 
   
-
   useEffect(() => {
-    axiosApi.get('https://domss.netlify.app/api/providers')
+    axiosApi.get(`${urlServer}`)
       .then(response => {
         setData(response.data);
-        console.log(response.data)
       })
       .catch(error => {
         console.log(error);
       });
-  }, [])
+  }, [urlServer]);
+
+  
 
   return (
     <Table>
       <thead>
-        <TableHeaders />
+        <tr>
+          <th>Ordem</th>
+          <th>Fornecedor</th>
+          <th>Nota</th>
+          <th>Hora</th>
+          <th>Quantidade</th>
+          <th>Carga</th>
+          <th>Agendada</th>
+        </tr>
       </thead>
-      <TableRow data={data} sector={sector} />
+      <tbody>
+        <TableRow data={data} sector={sector} />
+      </tbody>
     </Table>
   )
 }
