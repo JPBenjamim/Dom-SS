@@ -11,7 +11,7 @@ function App() {
     <div className={styles.container}>
       <Routes>
         <Route path="patrimonio" element={<Patrimony />} />
-        <Route path="cpd" element={<CPD />} />
+        <Route index element={<CPD />} />
         <Route path="conferente" element={<Patrimony />} />
         <Route path="*" element={<>ERROR</>}  />
       </Routes>
