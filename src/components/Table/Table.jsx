@@ -7,7 +7,6 @@ import TableRow from './TableRow'
 
 function TableComponent({sector, urlServer}) {
   const [data, setData] = useState([]);
-
   
   useEffect(() => {
     axiosApi.get(`${urlServer}`)
@@ -19,7 +18,30 @@ function TableComponent({sector, urlServer}) {
       });
   }, [urlServer]);
 
-  
+  useEffect(() => {
+    const getTable = () => {
+      axiosApi.get(`${urlServer}`)
+        .then(response => {
+          setData(response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+      
+    
+    setInterval(getTable, sector==='home' ? 1000 : 240000 );
+  }, [urlServer, sector]);
+
+  const getTableExport = () => {
+    axiosApi.get(`${urlServer}`)
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
   return (
     <Table>
@@ -35,7 +57,7 @@ function TableComponent({sector, urlServer}) {
         </tr>
       </thead>
       <tbody>
-        <TableRow data={data} sector={sector} />
+        <TableRow data={data} sector={sector} getTableExport={getTableExport}/>
       </tbody>
     </Table>
   )

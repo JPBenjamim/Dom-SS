@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import FormAdd from './formAdd';
 
-function ModalComponent({ name, color, typeModal, dataDetails }) {
+function ModalComponent({sector, name, color, typeModal, dataDetails, getTableExport }) {
   const [modalIsOpen, setIsOpen] = useState(false);
   const handleWheel = (e) => {
     e.preventDefault();
@@ -27,7 +27,7 @@ function ModalComponent({ name, color, typeModal, dataDetails }) {
           <Modal.Title>{name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <FormAdd dataDetails={dataDetails} typeModal={typeModal} closeModal={closeModal} />
+          <FormAdd  sector={sector} getTableExport={getTableExport} dataDetails={dataDetails} typeModal={typeModal} closeModal={closeModal} />
         </Modal.Body>
       </Modal>
     </>

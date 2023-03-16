@@ -5,7 +5,7 @@ function Home() {
   return (
     <>
       <Header sector="home" />
-      <Table sector="home" urlServer="https://domss.netlify.app/api/providers" />
+      <Table sector="home" urlServer="provider-list" />
     </>
   )
 }

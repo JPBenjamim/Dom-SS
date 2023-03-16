@@ -5,3 +5,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+
+.deleteNoteButton{
+    padding: 5px 10px;
+    background-color: orangered;
+    color: #FFFFFF;
+
+    border: none;
+    border-radius: 5px;
+}

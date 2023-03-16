@@ -4,15 +4,16 @@ import styles from "./Global.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Patrimony } from "./pages/patrimony";
 import { CPD } from "./pages/cpd";
+import { Home } from "./pages/Home";
 
 
 function App() {
   return (
     <div className={styles.container}>
       <Routes>
+        <Route index element={<Home />} />
         <Route path="patrimonio" element={<Patrimony />} />
-        <Route index element={<CPD />} />
-        <Route path="conferente" element={<Patrimony />} />
+        <Route path="cpd" element={<CPD />} />
         <Route path="*" element={<>ERROR</>}  />
       </Routes>
     </div>

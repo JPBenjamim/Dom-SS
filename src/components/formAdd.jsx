@@ -4,27 +4,30 @@ import { Form, Button, InputGroup } from "react-bootstrap";
 
 import { axiosApi } from "../services/axios";
 
-function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
+function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTableExport}) {
   const [supplierName, setSupplierName] = useState(dataDetails?.providerName || "");
   const [notes, setNotes] = useState("");
-  const [listNotes, setListNotes] = useState(dataDetails.notes.noteNumber.split(", ") || []);
+  const [plate, setPlate] = useState(dataDetails.driver?.plate || "");
+  const [listNotes, setListNotes] = useState(dataDetails.notes?.noteNumber.split(", ") || []);
   const [quantity, setQuantity] = useState(dataDetails.quantity || "");
-  const [hour, setHour] = useState(dataDetails.hour || "");
-  const [load, setLoad] = useState(dataDetails.loadType || "Seca");
-  const [isSchedule, setIsSchedule] = useState(dataDetails.isSchedule || false);
-  const [document, setDocument] = useState(dataDetails.driver.document || "");
-  const [vehicleType, setVehicleType] = useState(dataDetails.vehicleType || "Caminhão");
-  const [telePhone, setTelePhone] = useState(dataDetails.driver.telephone || "");
+  const [hour, setHour] = useState(dataDetails?.hour || "");
+  const [load, setLoad] = useState(dataDetails?.loadType || "Seca");
+  const [isSchedule, setIsSchedule] = useState(dataDetails?.isSchedule || false);
+  const [document, setDocument] = useState(dataDetails.driver?.document || "");
+  const [vehicleType, setVehicleType] = useState(dataDetails?.vehicleType || "Caminhão");
+  const [telePhone, setTelePhone] = useState(dataDetails.driver?.telephone || "");
   const [quantityType, setQuantityType] = useState(dataDetails.volumeType || "");
-  const [name, setName] = useState(dataDetails.driver.name || "");
+  const [name, setName] = useState(dataDetails.driver?.name || "");
   const [messageError, setMessageError] = useState("");
 
-  const handleSubmit = (e) => {
+  console.log(sector, sector === 'cpd')
+
+  const handleSubmitPost = (e) => {
     e.preventDefault();
     axiosApi.post('provider/', {
       provider: {
         providerName: supplierName,
-        hour: '2000-10-20',
+        hour: hour,
         quantity: quantity,
         isConfirmedByHeritage: false,
         isConfirmedByCPD: false,
@@ -40,7 +43,77 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
       },
       driver: {
           name: name,
-          plate: "1231",
+          plate: plate,
+          vehicleType: vehicleType,
+          document: document,
+          telephone: telePhone
+      }
+    }).then(() => {
+      setMessageError("");
+      closeModal();
+    }).catch(() => {
+      setMessageError("Erro ao incluir nota.");
+    });
+  };
+
+  const handleSubmitPut = (e) => {
+    console.log('asa');
+    e.preventDefault();
+    axiosApi.put(`provider-update/${dataDetails?.id}`, {
+      provider: {
+        providerName: supplierName,
+        hour: hour,
+        quantity: quantity,
+        isConfirmedByHeritage: false,
+        isConfirmedByCPD: false,
+        isConfirmedByArbitrator: false,
+        loadType: load,
+        volumeType: quantityType,
+        isChecked: false,
+        isReturned: false,
+        isSchedule: isSchedule
+      },
+      notes: {
+        noteNumber: listNotes.join(', ')
+      },
+      driver: {
+          name: name,
+          plate: plate,
+          vehicleType: vehicleType,
+          document: document,
+          telephone: telePhone
+      }
+    }).then(() => {
+      setMessageError("");
+      closeModal();
+    }).catch(() => {
+      setMessageError("Erro ao incluir nota.");
+    });
+  };
+
+
+  const handleSubmitReleaseNote = (e, sector) => {
+    e.preventDefault();
+    axiosApi.put(`provider-update/${dataDetails?.id}`, {
+      provider: {
+        providerName: supplierName,
+        hour: hour,
+        quantity: quantity,
+        isConfirmedByHeritage: false,
+        isConfirmedByCPD: sector === 'cpd',
+        isConfirmedByArbitrator: dataDetails.isConfirmedByCPD,
+        loadType: load,
+        volumeType: quantityType,
+        isChecked: false,
+        isReturned: false,
+        isSchedule: isSchedule
+      },
+      notes: {
+        noteNumber: listNotes.join(', ')
+      },
+      driver: {
+          name: name,
+          plate: plate,
           vehicleType: vehicleType,
           document: document,
           telephone: telePhone
@@ -74,7 +147,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
             type="text"
             placeholder="Nome do fornecedor"
             value={supplierName}
-            disabled={typeModal === 'releaseNote'}
+            disabled={typeModal === 'releaseNote' || 'view' === typeModal}
             onChange={(e) => setSupplierName(e.target.value)}
           />
         </Form.Group>
@@ -90,7 +163,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
                 setNotes(e.target.value);
               }
             }}
-            disabled={typeModal === 'releaseNote'}
+            disabled={typeModal === 'releaseNote' || 'view' === typeModal}
 
             onKeyUp={handleKeyUpEnter}
           />
@@ -124,7 +197,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
                     setQuantity(e.target.value);
                   }
                 }}
-                disabled={typeModal === 'releaseNote'}
+                disabled={typeModal === 'releaseNote' || 'view' === typeModal}
 
               />
             </div>
@@ -137,7 +210,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
                 value="pallets"
                 checked={quantityType === "pallets"}
                 onChange={(e) => setQuantityType(e.target.value)}
-                disabled={typeModal === 'releaseNote'}
+                disabled={typeModal === 'releaseNote' || 'view' === typeModal}
                 
               />
               <Form.Check
@@ -148,7 +221,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
                 value="volume"
                 checked={quantityType === "volume"}
                 onChange={(e) => setQuantityType(e.target.value)}
-                disabled={typeModal === 'releaseNote'}
+                disabled={typeModal === 'releaseNote' || 'view' === typeModal}
 
               />
             </div>
@@ -160,7 +233,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
           <Form.Control
             type="datetime-local"
             value={hour}
-            disabled={typeModal === 'releaseNote'}
+            disabled={typeModal === 'releaseNote' || 'view' === typeModal}
 
             onChange={(e) => setHour(e.target.value)}
           />
@@ -171,7 +244,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
           <Form.Control
             as="select"
             value={load}
-            disabled={typeModal === 'releaseNote'}
+            disabled={typeModal === 'releaseNote' || 'view' === typeModal}
 
             onChange={(e) => setLoad(e.target.value)}
           >
@@ -190,7 +263,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
               id="yes"
               name="schedule"
               value={true}
-              disabled={typeModal === 'releaseNote'}
+              disabled={typeModal === 'releaseNote' || 'view' === typeModal}
 
               checked={isSchedule === true}
               onChange={(e) => setIsSchedule(e.target.value !== true)}
@@ -206,7 +279,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
               id="no"
               name="schedule"
               value={false}
-              disabled={typeModal === 'releaseNote'}
+              disabled={typeModal === 'releaseNote' || 'view' === typeModal}
 
               checked={isSchedule === false}
               onChange={(e) => setIsSchedule(e.target.value === true)}
@@ -222,7 +295,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
           <Form.Control
             className="mb-3"
             type="text"
-            disabled={typeModal === 'releaseNote'}
+            disabled={typeModal === 'releaseNote' || 'view' === typeModal}
             onChange={e => setName(e.target.value)}
             value={name}
             placeholder="Nome do motorista"
@@ -234,7 +307,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
           <Form.Control
             className="mb-3"
             type="text"
-            disabled={typeModal === 'releaseNote'}
+            disabled={typeModal === 'releaseNote' || 'view' === typeModal}
 
             placeholder="CNH"
             inputProps={{ step: 1 }}
@@ -251,7 +324,7 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
           <Form.Label className="mb-1">Contato</Form.Label>
           <InputGroup className="mb-3">
             <Form.Control 
-              disabled={typeModal === 'releaseNote'}
+              disabled={typeModal === 'releaseNote' || 'view' === typeModal}
               type="cellphone" 
               placeholder="(21) 99999-9999"
               onChange={e => setTelePhone(e.target.value)}
@@ -259,11 +332,23 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
             />
           </InputGroup>
         </Form.Group>
+        <Form.Group className="mb-3" controlId="formContact">
+          <Form.Label className="mb-1">Placa</Form.Label>
+          <InputGroup className="mb-3">
+            <Form.Control 
+              disabled={typeModal === 'releaseNote' || 'view' === typeModal}
+              type="text" 
+              placeholder="Placa"
+              onChange={e => setPlate(e.target.value)}
+              value={plate}
+            />
+          </InputGroup>
+        </Form.Group>
 
         <Form.Group className="mb-3" controlId="formVehicle">
           <Form.Label className="mb-1">Tipo de Veiculo</Form.Label>
           <Form.Control as="select" 
-            disabled={typeModal === 'releaseNote'}
+            disabled={typeModal === 'releaseNote' || 'view' === typeModal}
             onChange={e => setVehicleType(e.target.value)}
             value={vehicleType}
           >
@@ -279,15 +364,32 @@ function FormAdd({ closeModal, typeModal = "", dataDetails = {}}) {
           {messageError}
         </p>
         <div className="d-flex justify-content-between pt-4">
-          {typeModal !== 'releaseNote' &&
-            <Button variant="primary" onClick={e => handleSubmit(e)}>{typeModal === 'edit' ? 'Salvar' : 'Adicionar'}</Button>
+          {sector === 'home' || typeModal !== 'releaseNote' &&
+            <Button variant="primary" onClick={e => {
+              if(typeModal === 'edit'){
+                getTableExport();
+                handleSubmitPut(e);
+              }else{
+                  handleSubmitPost(e);
+              }
+            }
+            }>{typeModal === 'edit' ? 'Salvar' : 'Adicionar'}</Button>
           }
           
           {typeModal === 'releaseNote' ?
           <>
-            <Button variant="success" onClick={closeModal}>
-              Liberar nota
-            </Button>
+            { 
+              dataDetails.isConfirmedByCPD ? 
+              <Button variant="success" onClick={(e) => handleSubmitReleaseNote(e, sector)}>
+                Nota Conferida
+              </Button>
+              :
+              <Button variant="success" onClick={(e) => handleSubmitReleaseNote(e, sector)}>
+                Liberar nota
+              </Button>
+            }
+
+            
           </>
           :
           <Button variant="danger" onClick={closeModal}>

@@ -1,11 +1,23 @@
 import Modal from '../Modal';
 import styles from './Table.module.css'
 
-function TableRow({ data = [], sector }) {
+import {axiosApi} from "../../services/axios";
+
+function TableRow({data = [], sector, getTableExport }) {
+  const handleDeleteNF = async (id) => {
+    try{
+      await axiosApi.delete(`provider-delete/${id}`);
+      getTableExport();
+    }catch(err){
+      console.log(err);
+    }
+  }
+
   return (
     <>
       {data.length > 0 &&
         data.map((item, index) => (
+          item.isConfirmedByArbitrator && sector !== 'home' ? null :
           <tr key={index}>
             <td>{index}</td>
             <td>{item.providerName}</td>
@@ -18,22 +30,49 @@ function TableRow({ data = [], sector }) {
             <td>{item.quantity}</td>
             <td>{item.loadType}</td>
             <td>{item.isSchedule ? 'Sim' : 'Não'}</td>
-            <td>
-              {sector !== 'home' && (
-                <Modal color="warning" name="Editar" typeModal="edit" dataDetails={item} />
-              )}
-            </td>
-            <td>
-              {sector !== 'home' && (
-                <Modal
-                  color="success"
-                  name="Liberar nota"
-                  typeModal="releaseNote"
-                  dataDetails={item}
-                />
-              )}
-            </td>
-          </tr>
+            {
+              sector === "home"
+
+              ?
+                <>
+                  <td>
+                    {!item.isConfirmedByCPD ? 
+                      'Aguardando liberação CPD' : 
+                      <>
+                        {item.isConfirmedByArbitrator ? 'Conferência concluída' : 'Aguardando conferência'}
+                      </>
+                    }
+                  </td>
+                  <td>
+                    <Modal sector={sector} getTableExport={getTableExport} color="warning" name="Ver" typeModal="view" dataDetails={item} />
+                  </td>
+                </>
+              :
+            <>
+              <td>
+                {sector !== 'home' && (
+                  <Modal sector={sector} getTableExport={getTableExport} color="warning" name="Editar" typeModal="edit" dataDetails={item} />
+                )}
+              </td>
+              <td>
+                {sector !== 'home' && (
+                  <Modal
+                    sector={sector}
+                    color="success"
+                    name={!item.isConfirmedByCPD ? 'Liberar nota' : 'Conferir nota'}
+                    typeModal="releaseNote"
+                    dataDetails={item}
+                  />
+                )}
+              </td>
+              <td>
+                <button type="button" onClick={() => handleDeleteNF(item.id)} className={styles.deleteNoteButton}>
+                  Deletar
+                </button>
+              </td>
+              </>
+              }
+            </tr>
         ))}
     </>
   );
