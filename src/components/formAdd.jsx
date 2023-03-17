@@ -20,7 +20,6 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
   const [name, setName] = useState(dataDetails.driver?.name || "");
   const [messageError, setMessageError] = useState("");
 
-  console.log(sector, sector === 'cpd')
 
   const handleSubmitPost = (e) => {
     e.preventDefault();
@@ -149,6 +148,8 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
             value={supplierName}
             disabled={typeModal === 'releaseNote' || 'view' === typeModal}
             onChange={(e) => setSupplierName(e.target.value)}
+            isInvalid={messageError.length > 0 && !supplierName.length > 0 ? true : false }
+
           />
         </Form.Group>
 
@@ -163,7 +164,8 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
                 setNotes(e.target.value);
               }
             }}
-            disabled={typeModal === 'releaseNote' || 'view' === typeModal}
+            disabled={typeModal === 'releaseNote' || 'view' === typeModal} 
+            isInvalid={messageError.length > 0 && !listNotes.length > 0 ? true : false }
 
             onKeyUp={handleKeyUpEnter}
           />
@@ -192,6 +194,8 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
                 type="text"
                 placeholder="Quantidade"
                 value={quantity}
+                isInvalid={messageError.length > 0 && !quantity.length > 0 ? true : false }
+
                 onChange={(e) => {
                   if (!isNaN(e.target.value)) {
                     setQuantity(e.target.value);
@@ -208,6 +212,8 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
                 name="quantityType"
                 id="pallets"
                 value="pallets"
+                isInvalid={messageError.length > 0 && !quantityType.length > 0 ? true : false }
+
                 checked={quantityType === "pallets"}
                 onChange={(e) => setQuantityType(e.target.value)}
                 disabled={typeModal === 'releaseNote' || 'view' === typeModal}
@@ -218,6 +224,8 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
                 label="Volume"
                 name="quantityType"
                 id="volume"
+                isInvalid={messageError.length > 0 && !quantityType.length > 0 ? true : false }
+                
                 value="volume"
                 checked={quantityType === "volume"}
                 onChange={(e) => setQuantityType(e.target.value)}
@@ -232,9 +240,10 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
           <Form.Label className="mb-1">Hora</Form.Label>
           <Form.Control
             type="datetime-local"
-            value={hour}
+            value={hour.slice(0, 16)}
             disabled={typeModal === 'releaseNote' || 'view' === typeModal}
-
+            isInvalid={messageError.length > 0 && !hour.length > 0 ? true : false }
+            
             onChange={(e) => setHour(e.target.value)}
           />
         </Form.Group>
@@ -245,7 +254,8 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
             as="select"
             value={load}
             disabled={typeModal === 'releaseNote' || 'view' === typeModal}
-
+            isInvalid={messageError.length > 0 && !load.length > 0 ? true : false }
+            
             onChange={(e) => setLoad(e.target.value)}
           >
             <option>Seca</option>
@@ -298,6 +308,8 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
             disabled={typeModal === 'releaseNote' || 'view' === typeModal}
             onChange={e => setName(e.target.value)}
             value={name}
+            isInvalid={messageError.length > 0 && !name.length > 0 ? true : false }
+
             placeholder="Nome do motorista"
           />
         </Form.Group>
@@ -308,7 +320,8 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
             className="mb-3"
             type="text"
             disabled={typeModal === 'releaseNote' || 'view' === typeModal}
-
+            isInvalid={messageError.length > 0 && !document.length > 0 ? true : false }
+            
             placeholder="CNH"
             inputProps={{ step: 1 }}
             onChange={(e) => {
@@ -329,6 +342,7 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
               placeholder="(21) 99999-9999"
               onChange={e => setTelePhone(e.target.value)}
               value={telePhone}
+              isInvalid={messageError.length > 0 && !telePhone.length > 0 ? true : false }
             />
           </InputGroup>
         </Form.Group>
@@ -341,6 +355,8 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
               placeholder="Placa"
               onChange={e => setPlate(e.target.value)}
               value={plate}
+              isInvalid={messageError.length > 0 && !plate.length > 0 ? true : false }
+
             />
           </InputGroup>
         </Form.Group>
@@ -360,12 +376,12 @@ function FormAdd({sector, closeModal, typeModal = "", dataDetails = {}, getTable
             <option>Furgão</option>
           </Form.Control>
         </Form.Group>
-        <p>
+        <p className="text-danger">
           {messageError}
         </p>
         <div className="d-flex justify-content-between pt-4">
           {sector === 'home' || typeModal !== 'releaseNote' &&
-            <Button variant="primary" onClick={e => {
+            <Button type="submit" variant="primary" onClick={e => {
               if(typeModal === 'edit'){
                 getTableExport();
                 handleSubmitPut(e);

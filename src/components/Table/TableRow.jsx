@@ -16,7 +16,15 @@ function TableRow({data = [], sector, getTableExport }) {
   return (
     <>
       {data.length > 0 &&
-        data.map((item, index) => (
+        data.map((item, index) => {
+          let date = new Date(item.hour);
+          const options = { timeZone: 'America/Sao_Paulo', hour12: false }
+          const timeString = date.toLocaleTimeString('pt-BR', options);
+          const hours = timeString.substring(0, timeString.indexOf(':'));
+          const minutes = timeString.substring(timeString.indexOf(':') + 1, timeString.lastIndexOf(':'));
+          index += 1;
+
+          return(
           item.isConfirmedByArbitrator && sector !== 'home' ? null :
           <tr key={index}>
             <td>{index}</td>
@@ -26,7 +34,7 @@ function TableRow({data = [], sector, getTableExport }) {
                 {item.notes.noteNumber}     
               </span>
             </td>
-            <td>{item.hour}</td>
+            <td>{hours}:{minutes}</td>
             <td>{item.quantity}</td>
             <td>{item.loadType}</td>
             <td>{item.isSchedule ? 'Sim' : 'Não'}</td>
@@ -73,7 +81,7 @@ function TableRow({data = [], sector, getTableExport }) {
               </>
               }
             </tr>
-        ))}
+        )})}
     </>
   );
 }
