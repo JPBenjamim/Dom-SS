@@ -1,4 +1,4 @@
-import Table from '../../components/Table/Table'
+import Table from '../../components/Table/TableAdmin'
 import Header from '../../components/Header'
 
 function Admin() {
