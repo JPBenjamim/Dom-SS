@@ -19,7 +19,7 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
   const [quantityType, setQuantityType] = useState(dataDetails.volumeType || '');
   const [name, setName] = useState(dataDetails.driver?.name || '');
   const [messageError, setMessageError] = useState('');
-
+  
   const handleSubmitPost = (e) => {
     e.preventDefault();
     axiosApi
@@ -58,7 +58,6 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
   };
 
   const handleSubmitPut = (e) => {
-    console.log('asa');
     e.preventDefault();
     axiosApi
       .put(`provider-update/${dataDetails?.id}`, {

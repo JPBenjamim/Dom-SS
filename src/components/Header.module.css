@@ -18,3 +18,14 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.titleAndLastUpdate{
+  display: flex;
+  align-items: center;
+}
+
+.titleAndLastUpdate p{
+  margin: initial;
+  margin-left: 20px;
+  font-weight: bold;
+}

@@ -7,54 +7,37 @@ import TableRow from './TableRow';
 
 import styles from './Table.module.css';
 
-function TableComponent({ sector, urlServer, isAdmin = false, isCpd = false, isHome = false}) {
+import ReactExport from 'react-export-excel-xlsx-fix';
+
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
+
+function TableComponent({ sector, urlServer, isAdmin = false }) {
   const now = new Date();
   const offset = -3 * 60;
-  const isoString = new Date(now.getTime() + offset * 60 * 1000).toISOString();
+  const dateTime = new Date(now.getTime() + offset * 60 * 1000);
+  const isoString = dateTime.toISOString();
   const [data, setData] = useState([]);
   const [whatUseSchedule, setWhatUseSchedule] = useState('all');
   const [startDatetime, setStartDatetime] = useState(isoString);
   const [endDatetime, setEndDatetime] = useState(isoString);
   const [isSchedule, setIsSchedule] = useState(false);
- 
-
-  const worksheets = [
-    {
-      name: "Requests",
-      columns: [
-        { label: "Full Name", value: "name" },
-        { label: "Email", value: "email" },
-        { label: "Template", value: "template" }
-      ],
-      data: [
-        {
-          name: "Bob Ross",
-          email: "boss_ross@gmail.com",
-          template: "Accounts Receivables"
-        }
-      ]
-    }
-  ];
-
-  useEffect(() => {
-    axiosApi
-      .get(`${urlServer}`)
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [urlServer]);
+  const dayCurrent = now.getDate().toString().padStart(2, '0');
+  const MonthCurrent = (now.getMonth() + 1).toString().padStart(2, '0');
+  const [dataSet1, setDataSet1] = useState([]);
 
   const getTableExport = () => {
     axiosApi
-      .get(`${urlServer}`)
+      .post(`provider-date`, {
+        startTime: `${dateTime.getFullYear()}-${MonthCurrent}-${dayCurrent}T00:00:28.549Z`,
+        endTime: `${dateTime.getFullYear()}-${MonthCurrent}-${dayCurrent}T23:59:28.549Z`,
+      })
       .then((response) => {
         setData(response.data);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -65,11 +48,40 @@ function TableComponent({ sector, urlServer, isAdmin = false, isCpd = false, isH
         endTime: endDatetime,
       })
       .then((response) => {
+        getExcelExport(response);
         setData(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const getExcelExport = ({ data }) => {
+    setDataSet1([]);
+    data.forEach((item) => {
+      const { hour } = item;
+      let hourProvider = new Date(hour);
+      const dayCurrent = hourProvider.getDate().toString().padStart(2, '0');
+      const monthCurrent = (hourProvider.getMonth() + 1).toString().padStart(2, '0');
+      let status = '';
+      if (item.isReturned) {
+        status = 'Devolvida';
+      } else if (item.isConfirmedByArbitrator) {
+        status = 'Confirmado conferente';
+      } else if (item.isConfirmedByCPD) {
+        status = 'Confirmado CPD';
+      } else {
+        status = 'Confirmado Patrimônio';
+      }
+
+      setDataSet1(prevDataSet => [...prevDataSet, {
+        data: `${dayCurrent}/${monthCurrent}/${hourProvider.getFullYear()}`,
+        store: `Realengo`,
+        provider: `${item.providerName}`,
+        status: status,
+        observation: '',
+      }]);        
+    });
   };
 
   const getDataForPeriodSchedule = () => {
@@ -80,6 +92,7 @@ function TableComponent({ sector, urlServer, isAdmin = false, isCpd = false, isH
         isSchedule: isSchedule,
       })
       .then((response) => {
+        getExcelExport(response);
         setData(response.data);
       })
       .catch((err) => {
@@ -94,6 +107,7 @@ function TableComponent({ sector, urlServer, isAdmin = false, isCpd = false, isH
         endTime: endDatetime,
       })
       .then((response) => {
+        getExcelExport(response);
         setData(response.data);
       })
       .catch((err) => {
@@ -103,7 +117,7 @@ function TableComponent({ sector, urlServer, isAdmin = false, isCpd = false, isH
 
   return (
     <>
-      {isAdmin  &&(
+      {isAdmin && (
         <div className={styles.containerAdminFilter}>
           <div className="col-3 d-flex justify-content-between">
             <Form.Group controlId="formHour" className="mb-3">
@@ -203,19 +217,30 @@ function TableComponent({ sector, urlServer, isAdmin = false, isCpd = false, isH
             >
               Filtrar
             </Button>
+            <ExcelFile>
+              <ExcelSheet data={dataSet1} name="Employees">
+                <ExcelColumn label="Data" value="data" />
+                <ExcelColumn label="Loja" value="store" />
+                <ExcelColumn label="Fornecedor" value="provider" />
+                <ExcelColumn label="Status" value="status" />
+                <ExcelColumn label="Observação" value="observation" />
+              </ExcelSheet>
+            </ExcelFile>
           </div>
         </div>
       )}
       <Table>
         <thead>
           <tr>
-            <th>Ordem</th>
-            <th>Fornecedor</th>
-            <th>Nota</th>
-            <th>Hora</th>
-            <th>Quantidade</th>
-            <th>Carga</th>
-            <th>Agendada</th>
+            <th className="align-middle text-center">Ordem</th>
+            <th className="align-middle text-center">Fornecedor</th>
+            <th className="align-middle text-center">Nota</th>
+            <th className="align-middle text-center">Hora</th>
+            <th className="align-middle text-center">Quantidade</th>
+            <th className="align-middle text-center">Carga</th>
+            <th className="align-middle text-center">Agendada</th>
+            <th className="align-middle text-center">Status</th>
+            <th className="align-middle text-center">Visualizar</th>
           </tr>
         </thead>
         <tbody>
