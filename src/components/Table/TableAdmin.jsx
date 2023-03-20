@@ -7,7 +7,7 @@ import TableRow from './TableRow';
 
 import styles from './Table.module.css';
 
-function TableComponent({ sector, urlServer, isAdmin = false }) {
+function TableComponent({ sector, urlServer, isAdmin = false, isCpd = false, isHome = false}) {
   const now = new Date();
   const offset = -3 * 60;
   const isoString = new Date(now.getTime() + offset * 60 * 1000).toISOString();
@@ -16,6 +16,7 @@ function TableComponent({ sector, urlServer, isAdmin = false }) {
   const [startDatetime, setStartDatetime] = useState(isoString);
   const [endDatetime, setEndDatetime] = useState(isoString);
   const [isSchedule, setIsSchedule] = useState(false);
+ 
 
   const worksheets = [
     {
@@ -102,7 +103,7 @@ function TableComponent({ sector, urlServer, isAdmin = false }) {
 
   return (
     <>
-      {isAdmin && (
+      {isAdmin  &&(
         <div className={styles.containerAdminFilter}>
           <div className="col-3 d-flex justify-content-between">
             <Form.Group controlId="formHour" className="mb-3">

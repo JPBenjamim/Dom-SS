@@ -45,24 +45,27 @@ function TableComponent({ sector, urlServer, isAdmin = false }) {
   };
 
   return (
+    
     <>
-      <Table>
-        <thead>
-          <tr>
-            <th>Ordem</th>
-            <th>Fornecedor</th>
-            <th>Nota</th>
-            <th>Hora</th>
-            <th>Quantidade</th>
-            <th>Carga</th>
-            <th>Agendada</th>
-          </tr>
-        </thead>
-        <tbody>
-          <TableRow data={data} sector={sector} getTableExport={getTableExport} />
-        </tbody>
-      </Table>
-    </>
+    <Table className="table-responsive">
+  <thead>
+    <tr>
+      <th className="align-middle text-center">Ordem</th>
+      <th className="align-middle text-center">Fornecedor</th>
+      <th className="align-middle text-center">Nota</th>
+      <th className="align-middle text-center">Hora</th>
+      <th className="align-middle text-center">Quantidade</th>
+      <th className="align-middle text-center">Carga</th>
+      <th className="align-middle text-center">Agendada</th>
+    </tr>
+  </thead>
+  <tbody>
+    <TableRow data={data} sector={sector} getTableExport={getTableExport} />
+  </tbody>
+</Table>
+
+      </>
+    
   );
 }
 
