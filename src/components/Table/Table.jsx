@@ -67,7 +67,7 @@ function TableComponent({ sector, urlServer, isAdmin = false, setLastUpdateDateS
 
 
   return (
-    <div className="table-responsive">
+    <div>
       <Table>
         <thead>
           <tr>
