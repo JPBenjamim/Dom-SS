@@ -1,5 +1,6 @@
 import {useState} from "react";
 import Table from '../../components/Table/TableAdmin'
+import {Footer} from '../../components/Footer'
 import Header from '../../components/Header'
 
 function Admin() {
@@ -9,6 +10,7 @@ function Admin() {
     <>
       <Header lastUpdateDateString={lastUpdateDateString} sector="admin" />
       <Table setLastUpdateDateString={setLastUpdateDateString} sector="home" isAdmin={true} urlServer="provider-list" />
+      <Footer />
     </>
   )
 }
