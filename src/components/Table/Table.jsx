@@ -67,8 +67,8 @@ function TableComponent({ sector, urlServer, isAdmin = false, setLastUpdateDateS
 
 
   return (
-    <>
-      <Table className="table-responsive">
+    <div className="table-responsive">
+      <Table>
         <thead>
           <tr>
             <th className="align-middle text-center">Ordem</th>
@@ -96,7 +96,7 @@ function TableComponent({ sector, urlServer, isAdmin = false, setLastUpdateDateS
           <TableRow data={data} sector={sector} getTableExport={getTableExport} />
         </tbody>
       </Table>
-    </>
+    </div>
   );
 }
 
