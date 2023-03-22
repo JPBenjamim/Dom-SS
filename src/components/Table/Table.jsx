@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
+
+import styles from './Table.module.css';
+
 import { axiosApi } from '../../services/axios';
 
 import TableRow from './TableRow';
@@ -82,7 +85,7 @@ function TableComponent({ sector, urlServer, isAdmin = false, setLastUpdateDateS
   };
 
   return (
-    <div>
+    <div className={styles.containerTable}>
       <Table>
         <thead>
           <tr>
