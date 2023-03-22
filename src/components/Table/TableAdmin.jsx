@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { axiosApi } from '../../services/axios';
 import { Form, Button } from 'react-bootstrap';
@@ -13,7 +13,7 @@ const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
-function TableComponent({ sector, urlServer, isAdmin = false }) {
+function TableComponent({ sector, isAdmin = false }) {
   const now = new Date();
   const offset = -3 * 60;
   const dateTime = new Date(now.getTime() + offset * 60 * 1000);

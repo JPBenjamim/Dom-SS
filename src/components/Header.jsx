@@ -4,13 +4,14 @@ import logo from '../assets/dom.png'
 
 import styles from './Header.module.css'
 
-function Header({sector, lastUpdateDateString}) {
+function Header({sector, lastUpdateDateString, countPallets = 0}) {
 
   return (
     <div className="d-flex justify-content-between align-items-center bg-withe mt-4 container-fluid">
     <div className={styles.titleAndLastUpdate}>
       <h1 className="mt-4 mb-4">Controle de fornecedores </h1>
       {sector !== 'admin' && <p>Última atualização: {lastUpdateDateString}</p>}
+      <p>Pallets: {countPallets}</p>
     </div>
   
     
