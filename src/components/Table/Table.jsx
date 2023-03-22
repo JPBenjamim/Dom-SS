@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Table as BootstrapTable } from 'react-bootstrap';
 
 import styles from './Table.module.css';
 
@@ -85,9 +85,9 @@ function TableComponent({ sector, urlServer, isAdmin = false, setLastUpdateDateS
   };
 
   return (
-    <div className={styles.containerTable}>
-      <Table>
-        <thead>
+   
+      <BootstrapTable Table   hover size="sm">
+        <thead >
           <tr>
             <th className="align-middle text-center">Ordem</th>
             <th className="align-middle text-center">Fornecedor</th>
@@ -113,8 +113,8 @@ function TableComponent({ sector, urlServer, isAdmin = false, setLastUpdateDateS
         <tbody>
           <TableRow data={data} sector={sector} getTableExport={getTableExport} />
         </tbody>
-      </Table>
-    </div>
+      </BootstrapTable>
+
   );
 }
 
