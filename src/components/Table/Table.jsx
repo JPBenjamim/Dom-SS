@@ -45,7 +45,7 @@ function TableComponent({ sector, urlServer, isAdmin = false, setLastUpdateDateS
       .catch((err) => {
         console.log(err);
       });
-  }, [MonthCurrent, dayCurrent, setLastUpdateDateString]);
+  }, [MonthCurrent, dayCurrent, setCountPallets, setLastUpdateDateString]);
 
   useEffect(() => {
     const getTable = () => {

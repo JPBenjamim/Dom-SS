@@ -42,10 +42,19 @@ function TableComponent({ sector, isAdmin = false }) {
   };
 
   const getDataForPeriod = () => {
+    const startDate = new Date(startDatetime);
+    const endDate = new Date(endDatetime);
+
+    const dayStartTime = startDate.getDate().toString().padStart(2, '0');
+    const monthStartTime = (startDate.getMonth() + 1).toString().padStart(2, '0');
+
+    const dayEndTime = endDate.getDate().toString().padStart(2, '0');
+    const monthEndTime = (endDate.getMonth() + 1).toString().padStart(2, '0');
+
     axiosApi
       .post(`provider-date`, {
-        startTime: startDatetime,
-        endTime: endDatetime,
+        startTime: `${startDate.getFullYear()}-${monthStartTime}-${dayStartTime}T00:00:28.549Z`,
+        endTime: `${endDate.getFullYear()}-${monthEndTime}-${dayEndTime}T23:59:28.549Z`,
       })
       .then((response) => {
         getExcelExport(response);
@@ -85,10 +94,18 @@ function TableComponent({ sector, isAdmin = false }) {
   };
 
   const getDataForPeriodSchedule = () => {
+    const startDate = new Date(startDatetime);
+    const endDate = new Date(endDatetime);
+
+    const dayStartTime = startDate.getDate().toString().padStart(2, '0');
+    const monthStartTime = (startDate.getMonth() + 1).toString().padStart(2, '0');
+
+    const dayEndTime = endDate.getDate().toString().padStart(2, '0');
+    const monthEndTime = (endDate.getMonth() + 1).toString().padStart(2, '0');
     axiosApi
       .post(`provider-date-schedule`, {
-        startTime: startDatetime,
-        endTime: endDatetime,
+        startTime: `${startDate.getFullYear()}-${monthStartTime}-${dayStartTime}T00:00:28.549Z`,
+        endTime: `${endDate.getFullYear()}-${monthEndTime}-${dayEndTime}T23:59:28.549Z`,
         isSchedule: isSchedule,
       })
       .then((response) => {
@@ -101,10 +118,19 @@ function TableComponent({ sector, isAdmin = false }) {
   };
 
   const getDataForPeriodAfterHour = () => {
+    const startDate = new Date(startDatetime);
+    const endDate = new Date(endDatetime);
+
+    const dayStartTime = startDate.getDate().toString().padStart(2, '0');
+    const monthStartTime = (startDate.getMonth() + 1).toString().padStart(2, '0');
+
+    const dayEndTime = endDate.getDate().toString().padStart(2, '0');
+    const monthEndTime = (endDate.getMonth() + 1).toString().padStart(2, '0');
+
     axiosApi
       .post(`provider-date-period`, {
-        startTime: startDatetime,
-        endTime: endDatetime,
+        startTime: `${startDate.getFullYear()}-${monthStartTime}-${dayStartTime}T00:00:28.549Z`,
+        endTime: `${endDate.getFullYear()}-${monthEndTime}-${dayEndTime}T23:59:28.549Z`,
       })
       .then((response) => {
         getExcelExport(response);
@@ -116,15 +142,15 @@ function TableComponent({ sector, isAdmin = false }) {
   };
 
   return (
-    <>
+    <div className={styles.containerTable}>
       {isAdmin && (
         <div className={styles.containerAdminFilter}>
           <div className="col-3 d-flex justify-content-between">
             <Form.Group controlId="formHour" className="mb-3">
               <Form.Label className="mb-1">Hora Inicial</Form.Label>
               <Form.Control
-                type="datetime-local"
-                value={startDatetime.slice(0, 16)}
+                type="date"
+                value={startDatetime.slice(0, 10)}
                 onChange={(e) => setStartDatetime(e.target.value)}
               />
             </Form.Group>
@@ -132,8 +158,8 @@ function TableComponent({ sector, isAdmin = false }) {
             <Form.Group controlId="formHour" className="mb-3">
               <Form.Label className="mb-1">Data Final</Form.Label>
               <Form.Control
-                type="datetime-local"
-                value={endDatetime.slice(0, 16)}
+                type="date"
+                value={endDatetime.slice(0, 10)}
                 onChange={(e) => setEndDatetime(e.target.value)}
               />
             </Form.Group>
@@ -247,7 +273,7 @@ function TableComponent({ sector, isAdmin = false }) {
           <TableRow data={data} sector={sector} getTableExport={getTableExport} />
         </tbody>
       </Table>
-    </>
+    </div>
   );
 }
 
