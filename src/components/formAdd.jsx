@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
 import { Form, Button, InputGroup } from 'react-bootstrap';
+import InputMask from 'react-input-mask';
+import ClockLoader from 'react-spinners/ClockLoader';
 
 import { axiosApi } from '../services/axios';
 
@@ -9,18 +11,21 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
   const [notes, setNotes] = useState('');
   const [plate, setPlate] = useState(dataDetails.driver?.plate || '');
   const [listNotes, setListNotes] = useState(dataDetails.notes?.noteNumber.split(', ') || []);
-  const [quantity, setQuantity] = useState(dataDetails.quantity || '');
+  const [quantity, setQuantity] = useState(dataDetails.quantity || 0);
   const [hour, setHour] = useState(dataDetails?.hour || '');
   const [load, setLoad] = useState(dataDetails?.loadType || 'Seca');
-  const [isSchedule, setIsSchedule] = useState(dataDetails?.isSchedule || false);
+  const [isSchedule, setIsSchedule] = useState(dataDetails?.isSchedule || true);
   const [document, setDocument] = useState(dataDetails.driver?.document || '');
   const [vehicleType, setVehicleType] = useState(dataDetails?.vehicleType || 'Caminhão');
   const [telePhone, setTelePhone] = useState(dataDetails.driver?.telephone || '');
   const [quantityType, setQuantityType] = useState(dataDetails.volumeType || '');
   const [name, setName] = useState(dataDetails.driver?.name || '');
   const [messageError, setMessageError] = useState('');
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmitPost = (e) => {
+    setIsLoading(true);
+
     e.preventDefault();
     axiosApi
       .post('provider/', {
@@ -50,14 +55,18 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
       })
       .then(() => {
         setMessageError('');
+        setIsLoading(false);
         closeModal();
       })
       .catch(() => {
         setMessageError('Erro ao incluir nota.');
+        setIsLoading(false);
       });
   };
 
   const handleSubmitPut = (e) => {
+    setIsLoading(true);
+
     e.preventDefault();
     axiosApi
       .put(`provider-update/${dataDetails?.id}`, {
@@ -87,9 +96,11 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
       })
       .then(() => {
         setMessageError('');
+        setIsLoading(false);
         closeModal();
       })
       .catch(() => {
+        setIsLoading(false);
         setMessageError('Erro ao incluir nota.');
       });
   };
@@ -329,14 +340,18 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
         <Form.Group className="mb-3" controlId="formContact">
           <Form.Label className="mb-1">Contato</Form.Label>
           <InputGroup className="mb-3">
-            <Form.Control
-              disabled={typeModal === 'releaseNote' || 'view' === typeModal}
-              type="cellphone"
-              placeholder="(21) 99999-9999"
-              onChange={(e) => setTelePhone(e.target.value)}
-              value={telePhone}
-              isInvalid={messageError.length > 0 && !telePhone.length > 0 ? true : false}
-            />
+            <div className="mb-3 input-group">
+              <InputMask
+                mask="(99) 99999-9999"
+                disabled={typeModal === 'releaseNote' || 'view' === typeModal}
+                type="cellphone"
+                className="form-control"
+                placeholder="(21) 99999-9999"
+                onChange={(e) => setTelePhone(e.target.value)}
+                value={telePhone}
+                isInvalid={messageError.length > 0 && !telePhone.length > 0 ? true : false}
+              />
+            </div>
           </InputGroup>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formContact">
@@ -374,8 +389,8 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
           {sector === 'home' ||
             (typeModal !== 'releaseNote' && (
               <Button
-                type="submit"
                 variant="primary"
+                disabled={isLoading}
                 onClick={(e) => {
                   if (typeModal === 'edit') {
                     getTableExport();
@@ -385,7 +400,7 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
                   }
                 }}
               >
-                {typeModal === 'edit' ? 'Salvar' : 'Adicionar'}
+                <>{typeModal === 'edit' ? 'Salvar' : 'Adicionar'}</>
               </Button>
             ))}
 

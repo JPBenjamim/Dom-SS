@@ -8,12 +8,22 @@ import TableRow from './TableRow';
 import styles from './Table.module.css';
 
 import ReactExport from 'react-export-excel-xlsx-fix';
+import { SkeletonTableRow } from '../skeleton/tableRow';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
-function TableComponent({ sector, isAdmin = false }) {
+function TableComponent({
+  sector,
+  isAdmin = false,
+  setCountPallets = () => {},
+  setCountScheduled = () => {},
+  setCountUnscheduled = () => {},
+  countPallets = 0, 
+  countScheduled = 0, 
+  countUnscheduled = 0
+}) {
   const now = new Date();
   const offset = -3 * 60;
   const dateTime = new Date(now.getTime() + offset * 60 * 1000);
@@ -26,22 +36,56 @@ function TableComponent({ sector, isAdmin = false }) {
   const dayCurrent = now.getDate().toString().padStart(2, '0');
   const MonthCurrent = (now.getMonth() + 1).toString().padStart(2, '0');
   const [dataSet1, setDataSet1] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getTableExport = () => {
+    setIsLoading(true);
     axiosApi
       .post(`provider-date`, {
         startTime: `${dateTime.getFullYear()}-${MonthCurrent}-${dayCurrent}T00:00:28.549Z`,
         endTime: `${dateTime.getFullYear()}-${MonthCurrent}-${dayCurrent}T23:59:28.549Z`,
       })
       .then((response) => {
-        setData(response.data);
+        const { data = [] } = response;
+
+        const countPallets = data.reduce((acc, item) => {
+          if (item.volumeType === 'pallets') {
+            return acc + item.quantity;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        const countScheduled = data.reduce((acc, item) => {
+          if (item.isSchedule) {
+            return acc + 1;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        const countUnscheduled = data.reduce((acc, item) => {
+          if (!item.isSchedule) {
+            return acc + 1;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        setIsLoading(false);
+        setCountPallets(countPallets);
+        setCountScheduled(countScheduled);
+        setCountUnscheduled(countUnscheduled);
       })
       .catch((err) => {
         console.log(err);
+        setIsLoading(false);
       });
   };
 
   const getDataForPeriod = () => {
+    setIsLoading(true);
+
     const startDate = new Date(startDatetime);
     const endDate = new Date(endDatetime);
 
@@ -57,10 +101,41 @@ function TableComponent({ sector, isAdmin = false }) {
         endTime: `${endDate.getFullYear()}-${monthEndTime}-${dayEndTime}T23:59:28.549Z`,
       })
       .then((response) => {
+        const { data = [] } = response;
+
+        const countPallets = data.reduce((acc, item) => {
+          if (item.volumeType === 'pallets') {
+            return acc + item.quantity;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        const countScheduled = data.reduce((acc, item) => {
+          if (item.isSchedule) {
+            return acc + 1;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        const countUnscheduled = data.reduce((acc, item) => {
+          if (!item.isSchedule) {
+            return acc + 1;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        setIsLoading(false);
+        setCountPallets(countPallets);
+        setCountScheduled(countScheduled);
+        setCountUnscheduled(countUnscheduled);
         getExcelExport(response);
-        setData(response.data);
+        setData(data);
       })
       .catch((err) => {
+        setIsLoading(false);
         console.log(err);
       });
   };
@@ -83,17 +158,21 @@ function TableComponent({ sector, isAdmin = false }) {
         status = 'Confirmado Patrimônio';
       }
 
-      setDataSet1(prevDataSet => [...prevDataSet, {
-        data: `${dayCurrent}/${monthCurrent}/${hourProvider.getFullYear()}`,
-        store: `Realengo`,
-        provider: `${item.providerName}`,
-        status: status,
-        observation: '',
-      }]);        
+      setDataSet1((prevDataSet) => [
+        ...prevDataSet,
+        {
+          data: `${dayCurrent}/${monthCurrent}/${hourProvider.getFullYear()}`,
+          store: `Realengo`,
+          provider: `${item.providerName}`,
+          status: status,
+          observation: '',
+        },
+      ]);
     });
   };
 
   const getDataForPeriodSchedule = () => {
+    setIsLoading(true);
     const startDate = new Date(startDatetime);
     const endDate = new Date(endDatetime);
 
@@ -109,15 +188,49 @@ function TableComponent({ sector, isAdmin = false }) {
         isSchedule: isSchedule,
       })
       .then((response) => {
+        const { data = [] } = response;
+
+        const countPallets = data.reduce((acc, item) => {
+          if (item.volumeType === 'pallets') {
+            return acc + item.quantity;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        const countScheduled = data.reduce((acc, item) => {
+          if (item.isSchedule) {
+            return acc + 1;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        const countUnscheduled = data.reduce((acc, item) => {
+          if (!item.isSchedule) {
+            return acc + 1;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        setIsLoading(false);
+        setCountPallets(countPallets);
+        setCountScheduled(countScheduled);
+        setCountUnscheduled(countUnscheduled);
+
         getExcelExport(response);
         setData(response.data);
       })
       .catch((err) => {
+        setIsLoading(false);
         console.log(err);
       });
   };
 
   const getDataForPeriodAfterHour = () => {
+    setIsLoading(true);
+
     const startDate = new Date(startDatetime);
     const endDate = new Date(endDatetime);
 
@@ -133,10 +246,41 @@ function TableComponent({ sector, isAdmin = false }) {
         endTime: `${endDate.getFullYear()}-${monthEndTime}-${dayEndTime}T23:59:28.549Z`,
       })
       .then((response) => {
+        const { data } = response;
+
+        const countPallets = data.reduce((acc, item) => {
+          if (item.volumeType === 'pallets') {
+            return acc + item.quantity;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        const countScheduled = data.reduce((acc, item) => {
+          if (item.isSchedule) {
+            return acc + 1;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        const countUnscheduled = data.reduce((acc, item) => {
+          if (!item.isSchedule) {
+            return acc + 1;
+          } else {
+            return acc;
+          }
+        }, 0);
+
+        setIsLoading(false);
+        setCountPallets(countPallets);
+        setCountScheduled(countScheduled);
+        setCountUnscheduled(countUnscheduled);
         getExcelExport(response);
-        setData(response.data);
+        setData(data);
       })
       .catch((err) => {
+        setIsLoading(false);
         console.log(err);
       });
   };
@@ -145,29 +289,27 @@ function TableComponent({ sector, isAdmin = false }) {
     <div className={styles.containerTable}>
       {isAdmin && (
         <div className={styles.containerAdminFilter}>
-          <div className="col-3 d-flex justify-content-between">
-            <Form.Group controlId="formHour" className="mb-3">
-              <Form.Label className="mb-1">Hora Inicial</Form.Label>
-              <Form.Control
-                type="date"
-                value={startDatetime.slice(0, 10)}
-                onChange={(e) => setStartDatetime(e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formHour" className="mb-3">
-              <Form.Label className="mb-1">Data Final</Form.Label>
-              <Form.Control
-                type="date"
-                value={endDatetime.slice(0, 10)}
-                onChange={(e) => setEndDatetime(e.target.value)}
-              />
-            </Form.Group>
-          </div>
-          <div>
-            <div className="d-block">
-              <span>Usar agendamento?</span>
-              <div className="form-group col-6 d-flex justify-content-around">
+          <div className={styles.contentAdminFilter}>
+            <div className={styles.containerPeriod}>
+              <Form.Group controlId="formHour" className={styles.containerDatePeriod}>
+                <Form.Label>De</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={startDatetime.slice(0, 10)}
+                  onChange={(e) => setStartDatetime(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="formHour" className={styles.containerDatePeriod}>
+                <Form.Label>Até</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={endDatetime.slice(0, 10)}
+                  onChange={(e) => setEndDatetime(e.target.value)}
+                />
+              </Form.Group>
+            </div>
+            <div className={styles.containerFilterType}>
+              <div className="form-group">
                 <Form.Check
                   type="radio"
                   label="Todos"
@@ -197,61 +339,74 @@ function TableComponent({ sector, isAdmin = false }) {
                 />
               </div>
             </div>
-          </div>
-          {whatUseSchedule === 'schedule' && (
-            <div>
-              <div className="d-block">
-                <>
-                  <span>Agendamento:</span>
-                  <div className="form-group col-6 d-flex justify-content-around">
-                    <Form.Check
-                      type="radio"
-                      label="Agendado"
-                      name="isSchedule"
-                      id="sim"
-                      value={true}
-                      checked={isSchedule === true}
-                      onChange={() => setIsSchedule(true)}
-                    />
-                    <Form.Check
-                      type="radio"
-                      label="Não agendado"
-                      name="isSchedule"
-                      id="nao"
-                      value={false}
-                      checked={isSchedule === false}
-                      onChange={() => setIsSchedule(false)}
-                    />
-                  </div>
-                </>
+            {whatUseSchedule === 'schedule' && (
+              <div className={styles.containerSchedule}>
+                <div className="form-group">
+                  <Form.Check
+                    type="radio"
+                    label="Agendado"
+                    name="isSchedule"
+                    id="sim"
+                    value={true}
+                    checked={isSchedule === true}
+                    onChange={() => setIsSchedule(true)}
+                  />
+                  <Form.Check
+                    type="radio"
+                    label="Não agendado"
+                    name="isSchedule"
+                    id="nao"
+                    value={false}
+                    checked={isSchedule === false}
+                    onChange={() => setIsSchedule(false)}
+                  />
+                </div>
               </div>
+            )}
+          </div>
+          <div className={styles.containerLeftFilter}>
+            <div className={styles.containerFiltersSum}>
+              <p>
+                <span>Pallets: </span> 
+                {countPallets}
+              </p>
+              <p>
+                <span>Agendados: </span>
+                {countScheduled}
+              </p>
+              <p>
+                <span>
+                  Não Agendados:
+                </span> {countUnscheduled}
+              </p>
             </div>
-          )}
-          <div>
-            <Button
-              type="submit"
-              variant="primary"
-              onClick={() => {
-                if (whatUseSchedule === 'all') {
-                  getDataForPeriod();
-                } else if (whatUseSchedule === 'schedule') {
-                  getDataForPeriodSchedule();
-                } else {
-                  getDataForPeriodAfterHour();
-                }
-              }}
-            >
-              Filtrar
-            </Button>
-            <ExcelFile>
-              <ExcelSheet data={dataSet1} name="Employees">
-                <ExcelColumn label="Data" value="data" />
-                <ExcelColumn label="Loja" value="store" />
-                <ExcelColumn label="Fornecedor" value="provider" />
-                <ExcelColumn label="Status" value="status" />
-                <ExcelColumn label="Observação" value="observation" />
-              </ExcelSheet>
-            </ExcelFile>
+
+            <div className={styles.containerButtons}>
+              <Button
+                type="submit"
+                variant="primary"
+                onClick={() => {
+                  if (whatUseSchedule === 'all') {
+                    getDataForPeriod();
+                  } else if (whatUseSchedule === 'schedule') {
+                    getDataForPeriodSchedule();
+                  } else {
+                    getDataForPeriodAfterHour();
+                  }
+                }}
+              >
+                Filtrar
+              </Button>
+              <ExcelFile>
+                <ExcelSheet data={dataSet1} name="Employees">
+                  <ExcelColumn label="Data" value="data" />
+                  <ExcelColumn label="Loja" value="store" />
+                  <ExcelColumn label="Fornecedor" value="provider" />
+                  <ExcelColumn label="Status" value="status" />
+                  <ExcelColumn label="Observação" value="observation" />
+                </ExcelSheet>
+              </ExcelFile>
+            </div>
           </div>
         </div>
       )}
@@ -270,7 +425,11 @@ function TableComponent({ sector, isAdmin = false }) {
           </tr>
         </thead>
         <tbody>
-          <TableRow data={data} sector={sector} getTableExport={getTableExport} />
+          {isLoading ? (
+            <SkeletonTableRow />
+          ) : (
+            <TableRow data={data} sector={sector} getTableExport={getTableExport} />
+          )}
         </tbody>
       </Table>
     </div>

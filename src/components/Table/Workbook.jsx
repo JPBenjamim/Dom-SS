@@ -7,7 +7,7 @@ const ExcelExport = ({ filename, worksheets }) => {
         filename={filename}
         element={
           <button className="download-excel-button">
-            <span>Download</span>
+            <span>Exportar</span>
             <img
               src={
                 "https://cdn3.iconfinder.com/data/icons/logos-brands-3/24/logo_brand_brands_logos_excel-512.png"
