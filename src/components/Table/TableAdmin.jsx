@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Table as BootstrapTable } from 'react-bootstrap';
+
 import { axiosApi } from '../../services/axios';
 import { Form, Button } from 'react-bootstrap';
 
@@ -20,9 +21,9 @@ function TableComponent({
   setCountPallets = () => {},
   setCountScheduled = () => {},
   setCountUnscheduled = () => {},
-  countPallets = 0, 
-  countScheduled = 0, 
-  countUnscheduled = 0
+  countPallets = 0,
+  countScheduled = 0,
+  countUnscheduled = 0,
 }) {
   const now = new Date();
   const offset = -3 * 60;
@@ -367,7 +368,7 @@ function TableComponent({
           <div className={styles.containerLeftFilter}>
             <div className={styles.containerFiltersSum}>
               <p>
-                <span>Pallets: </span> 
+                <span>Pallets: </span>
                 {countPallets}
               </p>
               <p>
@@ -375,9 +376,7 @@ function TableComponent({
                 {countScheduled}
               </p>
               <p>
-                <span>
-                  Não Agendados:
-                </span> {countUnscheduled}
+                <span>Não Agendados:</span> {countUnscheduled}
               </p>
             </div>
 
@@ -410,7 +409,7 @@ function TableComponent({
           </div>
         </div>
       )}
-      <Table>
+      <BootstrapTable hover size="sm">
         <thead>
           <tr>
             <th className="align-middle text-center">Ordem</th>
@@ -431,7 +430,7 @@ function TableComponent({
             <TableRow data={data} sector={sector} getTableExport={getTableExport} />
           )}
         </tbody>
-      </Table>
+      </BootstrapTable>
     </div>
   );
 }
