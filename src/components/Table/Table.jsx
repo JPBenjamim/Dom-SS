@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Table as BootstrapTable } from 'react-bootstrap';
 
 import { axiosApi } from '../../services/axios';
+import { SkeletonTableRow } from '../skeleton/tableRow';
 
 import TableRow from './TableRow';
 
@@ -144,7 +145,7 @@ function TableComponent({
       </thead>
       <tbody>
         {isLoading ? (
-          <></>
+          <SkeletonTableRow />
         ) : (
           <TableRow data={data} sector={sector} getTableExport={getTableExport} />
         )}

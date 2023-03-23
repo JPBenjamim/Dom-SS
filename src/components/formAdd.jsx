@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
-import ClockLoader from 'react-spinners/ClockLoader';
 
 import { axiosApi } from '../services/axios';
 
@@ -400,7 +399,7 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
                   }
                 }}
               >
-                <>{typeModal === 'edit' ? 'Salvar' : 'Adicionar'}</>
+                  <>{typeModal === 'edit' ? 'Salvar' : 'Adicionar'}</>
               </Button>
             ))}
 

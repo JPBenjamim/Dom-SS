@@ -8,6 +8,7 @@ import TableRow from './TableRow';
 import styles from './Table.module.css';
 
 import ReactExport from 'react-export-excel-xlsx-fix';
+import { SkeletonTableRow } from '../skeleton/tableRow';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -425,8 +426,7 @@ function TableComponent({
         </thead>
         <tbody>
           {isLoading ? (
-            <>
-            </>
+            <SkeletonTableRow />
           ) : (
             <TableRow data={data} sector={sector} getTableExport={getTableExport} />
           )}
