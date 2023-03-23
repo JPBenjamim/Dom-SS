@@ -28,3 +28,10 @@ body {
   border-radius: 10px;
   background: white;
 }
+
+
+@keyframes react-loading-skeleton {
+  100% {
+    transform: translateX(100%);
+  }
+}
