@@ -149,14 +149,10 @@ function TableComponent({
       const dayCurrent = hourProvider.getDate().toString().padStart(2, '0');
       const monthCurrent = (hourProvider.getMonth() + 1).toString().padStart(2, '0');
       let status = '';
-      if (item.isReturned) {
-        status = 'Devolvida';
-      } else if (item.isConfirmedByArbitrator) {
-        status = 'Confirmado conferente';
-      } else if (item.isConfirmedByCPD) {
-        status = 'Confirmado CPD';
-      } else {
-        status = 'Confirmado Patrimônio';
+      if (item.isSchedule) {
+        status = 'Agendado';
+      }else{
+        status = 'Não Agendado';
       }
 
       setDataSet1((prevDataSet) => [
