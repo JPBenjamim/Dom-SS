@@ -1,3 +1,4 @@
+/* 
 import Skeleton from 'react-loading-skeleton';
 
 const SkeletonTableRow = () => {
@@ -58,3 +59,4 @@ const SkeletonTableRow = () => {
 };
 
 export { SkeletonTableRow };
+*/
