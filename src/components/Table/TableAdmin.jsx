@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Table } from 'react-bootstrap';
+import { Table as BootstrapTable } from 'react-bootstrap';
+
 import { axiosApi } from '../../services/axios';
 import { Form, Button } from 'react-bootstrap';
 
@@ -8,6 +9,7 @@ import TableRow from './TableRow';
 import styles from './Table.module.css';
 
 import ReactExport from 'react-export-excel-xlsx-fix';
+import { SkeletonTableRow } from '../skeleton/tableRow';
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -19,9 +21,9 @@ function TableComponent({
   setCountPallets = () => {},
   setCountScheduled = () => {},
   setCountUnscheduled = () => {},
-  countPallets = 0, 
-  countScheduled = 0, 
-  countUnscheduled = 0
+  countPallets = 0,
+  countScheduled = 0,
+  countUnscheduled = 0,
 }) {
   const now = new Date();
   const offset = -3 * 60;
@@ -147,14 +149,10 @@ function TableComponent({
       const dayCurrent = hourProvider.getDate().toString().padStart(2, '0');
       const monthCurrent = (hourProvider.getMonth() + 1).toString().padStart(2, '0');
       let status = '';
-      if (item.isReturned) {
-        status = 'Devolvida';
-      } else if (item.isConfirmedByArbitrator) {
-        status = 'Confirmado conferente';
-      } else if (item.isConfirmedByCPD) {
-        status = 'Confirmado CPD';
-      } else {
-        status = 'Confirmado Patrimônio';
+      if (item.isSchedule) {
+        status = 'Agendado';
+      }else{
+        status = 'Não Agendado';
       }
 
       setDataSet1((prevDataSet) => {
@@ -374,7 +372,7 @@ function TableComponent({
           <div className={styles.containerLeftFilter}>
             <div className={styles.containerFiltersSum}>
               <p>
-                <span>Pallets: </span> 
+                <span>Pallets: </span>
                 {countPallets}
               </p>
               <p>
@@ -382,9 +380,7 @@ function TableComponent({
                 {countScheduled}
               </p>
               <p>
-                <span>
-                  Não Agendados:
-                </span> {countUnscheduled}
+                <span>Não Agendados:</span> {countUnscheduled}
               </p>
             </div>
 
@@ -418,7 +414,7 @@ function TableComponent({
           </div>
         </div>
       )}
-      <Table>
+      <BootstrapTable hover size="sm">
         <thead>
           <tr>
             <th className="align-middle text-center">Ordem</th>
@@ -434,13 +430,12 @@ function TableComponent({
         </thead>
         <tbody>
           {isLoading ? (
-            <>
-            </>
+            <SkeletonTableRow />
           ) : (
             <TableRow data={data} sector={sector} getTableExport={getTableExport} />
           )}
         </tbody>
-      </Table>
+      </BootstrapTable>
     </div>
   );
 }
