@@ -14,7 +14,7 @@ function FormAdd({ sector, closeModal, typeModal = '', dataDetails = {}, getTabl
   const [quantity, setQuantity] = useState(dataDetails.quantity || 0);
   const [hour, setHour] = useState(dataDetails?.hour || '');
   const [load, setLoad] = useState(dataDetails?.loadType || 'Seca');
-  const [isSchedule, setIsSchedule] = useState(dataDetails?.isSchedule || true);
+  const [isSchedule, setIsSchedule] = useState(dataDetails?.isSchedule || false);
   const [document, setDocument] = useState(dataDetails.driver?.document || '');
   const [vehicleType, setVehicleType] = useState(dataDetails?.vehicleType || 'Caminhão');
   const [telePhone, setTelePhone] = useState(dataDetails.driver?.telephone || '');

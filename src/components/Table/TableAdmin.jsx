@@ -157,16 +157,24 @@ function TableComponent({
         status = 'Confirmado Patrimônio';
       }
 
-      setDataSet1((prevDataSet) => [
-        ...prevDataSet,
-        {
-          data: `${dayCurrent}/${monthCurrent}/${hourProvider.getFullYear()}`,
-          store: `Realengo`,
-          provider: `${item.providerName}`,
-          status: status,
-          observation: '',
-        },
-      ]);
+      setDataSet1((prevDataSet) => {
+        if (item.volumeType === 'pallets') {
+          return [
+            ...prevDataSet,
+            {
+              data: `${dayCurrent}/${monthCurrent}/${hourProvider.getFullYear()}`,
+              store: `Realengo`,
+              provider: `${item.providerName}`,
+              status: status,
+              pallets: `${item.quantity}`,
+              observation: '',
+            },
+          ];
+        } else {
+          return prevDataSet;
+        }
+      });
+      
     });
   };
 
@@ -402,6 +410,7 @@ function TableComponent({
                   <ExcelColumn label="Loja" value="store" />
                   <ExcelColumn label="Fornecedor" value="provider" />
                   <ExcelColumn label="Status" value="status" />
+                  <ExcelColumn label="Pallets" value="pallets" />
                   <ExcelColumn label="Observação" value="observation" />
                 </ExcelSheet>
               </ExcelFile>
